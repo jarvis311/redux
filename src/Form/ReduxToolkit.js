@@ -1,31 +1,39 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PostAuthor from "../features/postAuthor";
 import { addPost, selectAllPost } from "../features/postSlice";
+import { selectAllUser } from "../features/users/userSlice";
 
 const ReduxToolkit = () => {
-  const dispatch = useDispatch();   
+  const dispatch = useDispatch();
 
-  const [title, setTitle] = useState('')
-  const [body, setBody] = useState('')
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [userId, setUserId] = useState("");
   const post = useSelector(selectAllPost);
+  const users = useSelector(selectAllUser);
 
+  const usersOptions = users.map((user) => (
+    <option key={user.userId} value={user.userId}>
+      {user.username}
+    </option>
+  ));
   const onSumbmitHandler = (e) => {
+    e.preventDefault();
+    //     dispatch(addPost({
+    //     id:nanoid(),
+    //     title,
+    //     body
+    // }))
+    // setTitle('')
+    // setBody('')
 
-    e.preventDefault()  
-            dispatch(addPost({
-            id:nanoid(),
-            title,
-            body
-        }))  
-        setTitle('')
-        setBody('')
-
-    // second method 
-        // dispatch(addPost(title, body))
-  }
+    // second method
+    dispatch(addPost(title, body, userId));
+  };
   return (
-    <div>
-        <form onSubmit={onSumbmitHandler} className="">
+    <div className="container"> 
+      <form onSubmit={onSumbmitHandler} className="col-md-4" style={{margin:'2rem'}}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
             Title
@@ -35,10 +43,10 @@ const ReduxToolkit = () => {
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            onChange={e => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             value={title}
             required
-            />
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">
@@ -48,13 +56,22 @@ const ReduxToolkit = () => {
             type="text"
             className="form-control"
             id="description"
-            onChange={e => setBody(e.target.value)}
+            onChange={(e) => setBody(e.target.value)}
             value={body}
             required
           />
         </div>
+        <select
+         className="form-select"
+          id="postAuthor"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+        >
+          <option value="">Select User</option>
+          {usersOptions}
+        </select>
 
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary my-2 mx-2">
           Submit
         </button>
       </form>
@@ -63,10 +80,10 @@ const ReduxToolkit = () => {
           <div className="card-body">
             <h5 className="card-title"> {item.title}</h5>
             <p className="card-text">{item.body}</p>
+            <PostAuthor userId={item.userId}/>
           </div>
         </div>
       ))}
-   
     </div>
   );
 };
