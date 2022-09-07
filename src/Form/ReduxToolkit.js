@@ -12,15 +12,16 @@ const ReduxToolkit = () => {
   const onSumbmitHandler = (e) => {
 
     e.preventDefault()  
-        //     dispatch(addPost({
-        //     id:nanoid(),
-        //     title,
-        //     body
-        // }))  
-        // setTitle('')
-        // setBody('')
+            dispatch(addPost({
+            id:nanoid(),
+            title,
+            body
+        }))  
+        setTitle('')
+        setBody('')
 
-        dispatch(addPost(title, body))
+    // second method 
+        // dispatch(addPost(title, body))
   }
   return (
     <div>
