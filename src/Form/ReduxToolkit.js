@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PostAuthor from "../features/postAuthor";
-import { addPost, selectAllPost } from "../features/postSlice";
+import { addPost, fetchPost, getPostError, getPostStatus, selectAllPost } from "../features/postSlice";
 import { selectAllUser } from "../features/users/userSlice";
 
 const ReduxToolkit = () => {
@@ -12,25 +12,47 @@ const ReduxToolkit = () => {
   const [userId, setUserId] = useState("");
   const post = useSelector(selectAllPost);
   const users = useSelector(selectAllUser);
-
+  const postStatus = useSelector(getPostStatus)
+  const postError = useSelector(getPostError)
+  
+  const clear = useRef(false)
+  useEffect(() => {
+    if(clear.current === true){
+      if(postStatus === 'idel'){
+        dispatch(fetchPost())
+      }
+    }
+    return () => {
+      clear.current = true
+    }
+  }, [dispatch])
+  
+console.log(post);
   const usersOptions = users.map((user) => (
     <option key={user.userId} value={user.userId}>
       {user.username}
     </option>
   ));
+  // const onSumbmitHandler = (e) => {
+  //   e.preventDefault();
+  //   //     dispatch(addPost({
+  //   //     id:nanoid(),
+  //   //     title,
+  //   //     body
+  //   // }))
+  //   // setTitle('')
+  //   // setBody('')
+
+  //   // second method
+  //   dispatch(addPost(title, body, userId));
+  // };
+
+  // async Thunk 
   const onSumbmitHandler = (e) => {
     e.preventDefault();
-    //     dispatch(addPost({
-    //     id:nanoid(),
-    //     title,
-    //     body
-    // }))
-    // setTitle('')
-    // setBody('')
 
-    // second method
-    dispatch(addPost(title, body, userId));
-  };
+  }
+
   return (
     <div className="container"> 
       <form onSubmit={onSumbmitHandler} className="col-md-4" style={{margin:'2rem'}}>
@@ -79,8 +101,7 @@ const ReduxToolkit = () => {
         <div key={item.id} className="card my-2 w-50">
           <div className="card-body">
             <h5 className="card-title"> {item.title}</h5>
-            <p className="card-text">{item.body}</p>
-            <PostAuthor userId={item.userId}/>
+            <p className="card-text">{item.body}</p>   
           </div>
         </div>
       ))}
