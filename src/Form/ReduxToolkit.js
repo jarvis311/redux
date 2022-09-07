@@ -102,6 +102,7 @@ console.log(post);
           <div className="card-body">
             <h5 className="card-title"> {item.title}</h5>
             <p className="card-text">{item.body}</p>   
+            <PostAuthor userId={post.userId}/>
           </div>
         </div>
       ))}
