@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PostAuthor from "../features/postAuthor";
-import { addPost, fetchPost, getPostError, getPostStatus, selectAllPost } from "../features/postSlice";
+import { addAsyncPost, addPost, fetchPost, getPostError, getPostStatus, selectAllPost } from "../features/postSlice";
 import { selectAllUser } from "../features/users/userSlice";
 
 const ReduxToolkit = () => {
@@ -10,6 +10,9 @@ const ReduxToolkit = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [userId, setUserId] = useState("");
+  const [requestStatus, setRequestStatus] = useState('idel')
+
+
   const post = useSelector(selectAllPost);
   const users = useSelector(selectAllUser);
   const postStatus = useSelector(getPostStatus)
@@ -48,9 +51,13 @@ console.log(post);
   // };
 
   // async Thunk 
+  
   const onSumbmitHandler = (e) => {
     e.preventDefault();
-
+    if(requestStatus === 'idel'){
+      dispatch(addAsyncPost({title, body, userId})).unwrap()
+    }
+    
   }
 
   return (
